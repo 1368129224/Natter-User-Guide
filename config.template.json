@@ -1,0 +1,42 @@
+{
+    "logging": {
+        "level": "info",
+        "log_file": "./natter.log"
+    },
+    "status_report": {
+        "hook": "bash ./natter-hook.sh '{protocol}' '{inner_ip}' '{inner_port}' '{outer_ip}' '{outer_port}'",
+        "status_file": "./natter-status.json"
+    },
+    "open_port": {
+        "tcp": [
+            "0.0.0.0:50000"
+        ],
+        "udp": [
+        ]
+    },
+    "forward_port": {
+        "tcp": [
+        ],
+        "udp": [
+        ]
+    },
+    "stun_server": {
+        "tcp": [
+            "fwa.lifesizecloud.com",
+            "stun.isp.net.au",
+            "stun.freeswitch.org",
+            "stun.voip.blackberry.com",
+            "stun.nextcloud.com",
+            "stun.stunprotocol.org",
+            "stun.sipnet.com",
+            "stun.radiojar.com",
+            "stun.sonetel.com",
+            "stun.voipgate.com"
+        ],
+        "udp": [
+            "stun.miwifi.com",
+            "stun.qq.com"
+        ]
+    },
+    "keep_alive": "www.qq.com"
+}
