@@ -1,6 +1,6 @@
-# NAT-hole-punching
+# Natter 使用指南
 
-本项目旨在帮助大家应用 [Natter v0.9](https://github.com/MikeWang000000/Natter/tree/v0.9) ，在 **Full Cone NAT** 网络环境下打开 TCP 端口，获得在 IPv4 可连接的端口。
+本项目旨在帮助大家应用 [Natter v0.9](https://github.com/MikeWang000000/Natter/tree/v0.9) ，在 **Full Cone NAT** 网络环境下打开 TCP 端口，获得在 IPv4 可连接的端口，并提供一些Hook的模板。
 
 ## Natter 基本使用
 
@@ -122,10 +122,10 @@ git checkout v0.9
     python natter.py -c ./config.json
 
     # 离开screen
-    # 按 Ctrl + A 再按 Ctrl + D
+    按 Ctrl + A 再按 Ctrl + D
 
     # 回到screen
-    # screen -r nat
+    screen -r nat
     ```
     运行成功后会有以下打印
     ```
@@ -157,26 +157,21 @@ git checkout v0.9
 
 [Natter v0.9](https://github.com/MikeWang000000/Natter/tree/v0.9) 支持了Hook调用，即在打洞成功后执行脚本。
 
-利用这一点，我们可以在打洞成功后自动登录到路由器并设置端口转发，实现一些自动化功能，例如：自动设置端口转发、配置消息推送等。
+利用这一点，我们可以在打洞成功后自动登录到路由器并设置端口转发，实现一些自动化功能，例如：自动设置端口转发、自动修改 qBittorrent 传输端口、配置消息推送等。
 
-PS：如果看到这里就懂了，那么大佬您就不用浪费时间看后续内容了，相信您能实现自己想要的功能。
+以下提供一些使用模板，仅建议愿意折腾的小伙伴使用，欢迎大家PR！
 
-以下提供一些使用模板，仅建议愿意折腾的小伙伴使用：
+* [自动设置端口转发](https://github.com/1368129224/Natter-User-Guide/blob/main/template/auto_forward/auto_forward.md)
 
-* 自动设置 qBittorrent 传输端口，实现 IPv4 可联通
+    适用于具有  [UCI](https://openwrt.org/zh/docs/guide-user/base-system/uci) 系统的 OpenWRT 路由器，自动设置端口转发。
 
-* 自动设置端口转发
+* [自动设置 qBittorrent 传输端口](https://github.com/1368129224/Natter-User-Guide/blob/main/template/qBittorrent/qBittorrent.md)
 
-    适用于具有  [UCI](https://openwrt.org/zh/docs/guide-user/base-system/uci) 系统的 OpenWRT 路由器。
+    自动修改 qBittorrent 传输端口，提高连通性。
 
-    登录路由后台，执行 `uci` 命令，有如下打印则具有 UCI 系统。
+* [使用 message-pusher 进行推送消息](https://github.com/1368129224/Natter-User-Guide/blob/main/template/push/push.md)
 
-    ```
-    root@ImmortalWrt:~# uci
-    Usage: uci [<options>] <command> [<arguments>]
-    ```
-
-* 配置 [message-pusher](https://github.com/songquanpeng/message-pusher) 推送消息
+    使用 [message-pusher](https://github.com/songquanpeng/message-pusher) 在网络环境改变时进行消息推送。
 
 ## Thanks
 
