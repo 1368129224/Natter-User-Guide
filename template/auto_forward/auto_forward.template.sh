@@ -1,16 +1,7 @@
-uci add firewall redirect
-uci show firewall.@redirect[-1]
-
-uci set firewall.@redirect[-1].dest='lan'
-uci set firewall.@redirect[-1].target='DNAT'
-uci set firewall.@redirect[-1].name='ttyd'
-uci set firewall.@redirect[-1].src='wan'
-uci set firewall.@redirect[-1].src_dport='51000'
-uci set firewall.@redirect[-1].dest_ip='192.168.1.100'
-uci set firewall.@redirect[-1].dest_port='7681'
-
-uci commit firewall
-/etc/init.d/firewall restart
+# 对应的规则ID
+rule_id="0"
+# 目标端口，内网设备提供服务的端口
+target_port=""
 
 echo "Update openwrt firewall..."
 

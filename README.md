@@ -2,6 +2,10 @@
 
 本项目旨在帮助大家应用 [Natter v0.9](https://github.com/MikeWang000000/Natter/tree/v0.9) ，在 **Full Cone NAT** 网络环境下打开 TCP 端口，获得在 IPv4 可连接的端口，并提供一些Hook的模板。
 
+<p align="right">
+Natter 官方交流群组：<a href="https://jq.qq.com/?_wv=1027&k=EYXohGpC">Q 657590400</a> | <a href="https://t.me/+VS5sjOWGgzsyYjY1">TG</a>
+</p>
+
 ## Natter 基本使用
 
 ### 前提条件
@@ -42,7 +46,7 @@ git checkout v0.9
 
 2. 编辑配置文件
 
-    复制 `natter-config.template.json` 并重命名为 `config.json`，根据注释填写配置，参考 `config.template.json`。PS：json 不支持注释，请不要再配置文件中添加注释。
+    复制 `natter-config.template.json` 并重命名为 `config.json`，根据注释填写配置，参考 `config.template.json`。PS：json 不支持注释，请不要在配置文件中添加注释。
 
     这里我们采用仅打洞方式，手动设置端口转发。如：在 "open_port" -> "tcp" 中添加 "0.0.0.0:50000"。
     ```
@@ -163,7 +167,7 @@ git checkout v0.9
 
 * [自动设置端口转发](https://github.com/1368129224/Natter-User-Guide/blob/main/template/auto_forward/auto_forward.md)
 
-    适用于具有  [UCI](https://openwrt.org/zh/docs/guide-user/base-system/uci) 系统的 OpenWRT 路由器，自动设置端口转发。
+    适用于具有 [UCI](https://openwrt.org/zh/docs/guide-user/base-system/uci) 系统的 OpenWRT 路由器，自动设置端口转发。
 
 * [自动设置 qBittorrent 传输端口](https://github.com/1368129224/Natter-User-Guide/blob/main/template/qBittorrent/qBittorrent.md)
 
@@ -175,5 +179,5 @@ git checkout v0.9
 
 ## Thanks
 
-* [NatTypeTester](https://github.com/HMBSbige/NatTypeTester)
 * [Natter](https://github.com/MikeWang000000/Natter)
+* [NatTypeTester](https://github.com/HMBSbige/NatTypeTester)
