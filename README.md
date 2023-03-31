@@ -1,66 +1,50 @@
 # NAT-hole-punching
 
-本项目旨在帮助大家应用 [Natter v0.9](https://github.com/MikeWang000000/Natter/tree/v0.9) ，在 **Full Cone NAT** 网络环境下进行 TCP 打洞，提高 [qBittorrent](https://www.qbittorrent.org/) 连通性，获得近似于公网 IPv4 的体验。
+本项目旨在帮助大家应用 [Natter v0.9](https://github.com/MikeWang000000/Natter/tree/v0.9) ，在 **Full Cone NAT** 网络环境下打开 TCP 端口，获得在 IPv4 可连接的端口。
 
-## 原理
+## Natter 基本使用
 
-[Natter v0.9](https://github.com/MikeWang000000/Natter/tree/v0.9) 支持了Hook调用，即在打洞成功后执行脚本。
-
-利用这一点，我们可以在打洞成功后自动登录到路由器并设置端口转发，实现一些自动化功能。
-
-PS：如果看到这里就懂了，那么大佬您就不用浪费时间看后续内容了，相信您能实现自己想要的功能。
-
-## 条件
+### 前提条件
 
 1. 网络环境 NAT 为 **Full Cone NAT**，又称 NAT1。
-   
-    使用 [NatTypeTester](https://github.com/HMBSbige/NatTypeTester) 进行 NAT 检测，结果为下图便可以继续后续步骤。
 
-    TODO：补充图片
+    以下家庭网络环境很有可能是 NAT1 ，例如：
 
-2. 路由器是 openwrt 系统，并且具备 [UCI](https://openwrt.org/zh/docs/guide-user/base-system/uci) 系统
+    * 使用光猫拨号，但拥有光猫控制权，能够设置DMZ。
 
-    登录路由后台，执行 `uci` 命令，有如下打印则具备 UCI 系统。
+    * 光猫为桥接模式，使用路由拨号，拥有路由控制权。
 
-    ```
-    root@ImmortalWrt:~# uci
-    Usage: uci [<options>] <command> [<arguments>]
-    ```
+    处于以上环境时，使用 [NatTypeTester](https://github.com/HMBSbige/NatTypeTester) 进行 NAT 检测，结果为下图便可以继续后续步骤。
 
-    PS：后续视情况支持其他路由系统
+2. 运营商没有配置防火墙
 
-3. Natter 需要运行在光猫下的任意设备上，装有 python 环境，并且能通过 ssh 连接到主路由，或运行在主路由上。
+    一般我们无法感知，有条件的用户可以使用 `nmap` 在外部网络对出口IP进行 TCP 全端口扫描，期望结果是不为全部关闭。
 
-    TODO：补充网络拓扑图
+### 使用教程
 
-## 步骤
+PS：由于我的路由限制，暂时只讲解在路由下挂设备上运行 Natter 。
 
-1. 配置私钥登录 openwrt 路由器
+#### 在路由下挂设备上运行
 
-    TODO：添加说明
+![网络拓扑](img/network.jpg)
 
-2. 创建端口转发规则
+本例讲解光猫桥接，且在 NAS 上运行 Natter 。
 
-    TODO：添加说明
+1. 在准备运行 Natter 的设备上下载源码
+```shell
+# 下载源码
+git clone https://github.com/MikeWang000000/Natter.git
+# 进入Natter目录
+cd Natter/
+# 切换到v0.9版本
+git checkout v0.9
+```
 
-3. 下载 Natter v0.9
+2. 编辑配置文件
 
-    在准备运行 Natter 的设备上下载源码
+    复制 `natter-config.template.json` 并重命名为 `config.json`，根据注释填写配置，参考 `config.template.json`。PS：json 不支持注释，请不要再配置文件中添加注释。
 
-    ```shell
-    # 下载源码
-    git clone https://github.com/MikeWang000000/Natter.git
-    # 进入Natter目录
-    cd Natter/
-    # 切换到v0.9版本
-    git checkout v0.9
-    ```
-
-4. 编辑 config
-
-    复制 `natter-config.template.json` 并重命名为 `natter-config.json`，根据注释填写配置，参考 `config.template.json`。
-    
-    这里我们采用仅打洞方式，手动设置端口转发，转发交给路由来做。例如：在 "open_port" -> "tcp" 中添加 "0.0.0.0:50000"。
+    这里我们采用仅打洞方式，手动设置端口转发。如：在 "open_port" -> "tcp" 中添加 "0.0.0.0:50000"。
     ```
     {
         "logging": {
@@ -68,14 +52,13 @@ PS：如果看到这里就懂了，那么大佬您就不用浪费时间看后续
             "log_file": "./natter.log" // 日志文件路径，不需要日志则置空：""
         },
         "status_report": {
-            "hook": "bash ./natter-hook.sh '{protocol}' '{inner_ip} ' '{inner_port}' '{outer_ip}' '{outer_port}'", // Hook执行方式，一般无需改动
-            "status_file": "./natter-status.json" // 实时端口映射状态储存至指定文件，不需要则置空：""
+            "hook": "bash ./natter-hook.sh '{protocol}' '{inner_ip} ' '{inner_port} ' '{outer_ip}' '{outer_port}'", // Hook文件路径
+            "status_file": "./natter-status.json" // 实时端口映射状态储存至指定文件，不 需要则置空：""
         },
         "open_port": {
             // 此处设置 Natter 打洞IP:端口。（仅打洞）
-            // 此处地址为 Natter 绑定（监听）的地址，Natter 仅对这些地址打洞，您需要手动设置端口转发。
+            // 此处地址为 Natter 绑定（监听）的地址，Natter 仅对这些地址打洞，您需要手动    设置端口转发。
             // 注意：使用默认出口IP，请使用 0.0.0.0 ，而不是 127.0.0.1 。
-            // 注意：这里尽量只保留一条规则，避免出现意想不到的错误
             "tcp": [
                 "0.0.0.0:50000"
             ],
@@ -114,68 +97,86 @@ PS：如果看到这里就懂了，那么大佬您就不用浪费时间看后续
                 "stun.qq.com"
             ]
         },
-        // 此处设置 HTTP Keep-Alive 服务器。请确保该服务器 80 端口开放，且支持 HTTP Keep-Alive。
+        // 此处设置 HTTP Keep-Alive 服务器。请确保该服务器 80 端口开放，且支持 HTTP     Keep-Alive。
         "keep_alive": "www.qq.com"
     }
     ```
-    PS：json 不支持注释，请不要再配置文件中添加注释
 
-5. 编辑 Hook 脚本
+3. 运行 Natter
 
+    配置完成后的目录结构: 
     ```
-    protocol=$1
-    inner_ip=$2
-    inner_port=$3
-    outter_ip=$4
-    outter_port=$5
-
-    echo "[Script] - Upload to server: ${protocol}: ${inner_ip}:${inner_port} -> ${outter_ip}:${outter_port}"
-
-    # Write your upload script below...
-
-    # 以下需要我们添加，并按你自己实际填写
-    qb_web_url="https://192.168.1.200:8080" // qb登录URL，注意是http还是https
-    qb_username="admin" // qb用户名
-    qb_password="adminadmin" // qb密码
-    rule_id="0" // 端口转发规则ID
-
-    echo "Update qBittorrent listen port to $outter_port..."
-
-    qb_cookie=$(curl --insecure -s -i --header "Referer: $qb_web_url" --data "username=$qb_username&password=$qb_password" $qb_web_url/api/v2/auth/login | grep -i set-cookie | cut -c13-48)
-    curl --insecure -X POST -b "$qb_cookie" -d 'json={"listen_port":"'$outter_port'"}' "$qb_web_url/api/v2/app/setPreferences"
-
-    echo "Update openwrt firewall..."
-
-    # 这里通过SSH连接到 openwrt 路由器，并修改端口转发规则
-    ssh openwrt "uci set firewall.@redirect[$rule_id].dest_port=$outter_port;uci set firewall.@redirect[$rule_id].src_dport=$inner_port;uci commit firewall;/etc/init.d/firewall    restart;exit"
-
-    echo "Done."
+    .
+    ├── config.json
+    ├── natter-hook.sh
+    └── natter.py
     ```
 
-6. 后台执行脚本
-
-    由于运营商网络环境通常在2天左右会改变(公网IP地址)，我们需要将 Natter 常驻运行，自动进行打洞和设置端口转发。
-
-    这里建议使用 `screen` 来运行 Natter：
+    由于 STUN 特性，需要后台运行以保持长连接，这里建议使用 `screen` 来运行 Natter ，且可以随时切回。
 
     ```shell
-    # 新建screen
+    # 新建screen，名为nat
     screen -S nat
+
     # 运行脚本
     python natter.py -c ./config.json
+
     # 离开screen
     # 按 Ctrl + A 再按 Ctrl + D
+
     # 回到screen
     # screen -r nat
     ```
+    运行成功后会有以下打印
+    ```
+    [INFO] - >>> [TCP] ('192.168.1.100', 50000) -> ('61.157.1.123', 46087) <<<
+    [Script] - Upload to server: tcp: 192.168.1.100:50000 -> 61.157.1.123:46087
+    ```
+    至此，我们完成了内网 `192.168.1.100:50000` 到外网 `61.157.1.123:46087` 的 TCP 打洞，接下来需要在路由中设置端口转发把 `50000` 转发到目标的端口上。
 
-7. 进行验证
+4. 修改端口转发
 
-    * 登录路由器后台查看端口转发是否正确
-    * 使用[端口扫描工具](https://tool.chinaz.com/port)确认端口是否打开
-    * 在 qBittorrent 页面查看连通性，或在PT站点查看连通性
+    进入路由器后台，防火墙->端口转发->新建规则，进行如下设置：
+    ```
+    来源：WAN
+    来源端口：50000
+    目标：LAN
+    目标地址：内网设备IP地址
+    目标端口：内网设备提供服务的端口
+    ```
 
-8. Enjoy！
+5. 验证
+
+    建议将目标指向到web服务，方便访问以检测打通是否成功，如：qBittorrent web等。
+
+#### 在路由上运行
+
+*待补充*
+
+## 高级用法
+
+[Natter v0.9](https://github.com/MikeWang000000/Natter/tree/v0.9) 支持了Hook调用，即在打洞成功后执行脚本。
+
+利用这一点，我们可以在打洞成功后自动登录到路由器并设置端口转发，实现一些自动化功能，例如：自动设置端口转发、配置消息推送等。
+
+PS：如果看到这里就懂了，那么大佬您就不用浪费时间看后续内容了，相信您能实现自己想要的功能。
+
+以下提供一些使用模板，仅建议愿意折腾的小伙伴使用：
+
+* 自动设置 qBittorrent 传输端口，实现 IPv4 可联通
+
+* 自动设置端口转发
+
+    适用于具有  [UCI](https://openwrt.org/zh/docs/guide-user/base-system/uci) 系统的 OpenWRT 路由器。
+
+    登录路由后台，执行 `uci` 命令，有如下打印则具有 UCI 系统。
+
+    ```
+    root@ImmortalWrt:~# uci
+    Usage: uci [<options>] <command> [<arguments>]
+    ```
+
+* 配置 [message-pusher](https://github.com/songquanpeng/message-pusher) 推送消息
 
 ## Thanks
 
