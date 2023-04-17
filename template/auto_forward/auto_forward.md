@@ -69,6 +69,8 @@ Usage: uci [<options>] <command> [<arguments>]
     /etc/init.d/firewall restart
     ```
 
+    PS: 经测试，`ImmortalWrt 21.02.5` 不需要执行 `/etc/init.d/firewall restart` 即可生效，建议初次配置时手动测试。
+
     **注意**：创建好规则后，请记住规则的ID，后面将会用到。
 
     可以通过 `uci show firewall.@redirect[id]` 确定规则ID，也可以通过Web后台查看，从上到下ID从0递增。
@@ -88,3 +90,4 @@ Usage: uci [<options>] <command> [<arguments>]
     ssh openwrt "uci set firewall.@redirect[$rule_id].dest_port=$target_port;uci set firewall.@redirect[$rule_id].src_dport=$inner_port;uci commit firewall;uci show firewall.@redirect[$rule_id];/etc/init.d/firewall restart;exit"
     ```
 
+    PS: 经测试，`ImmortalWrt 21.02.5` 不需要执行 `/etc/init.d/firewall restart` 即可生效，填写Hook时根据实际情况增减restart步骤。
