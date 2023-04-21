@@ -1,10 +1,10 @@
 # 自动设置qBittorrent传输端口
 
-## 使用步骤
+## 配置
 
 1. 测试能否或正常登录
 
-    在运行 Natter 的设备上执行 `curl --insecure -s -i --header "Referer: https://localhost:8080" --data "username=admin&password=adminadmin" https://localhost:8080/api/v2/auth/login | grep -i set-cookie | cut -c13-48` 检查能否打印 `SID=6oavHb8b4MtL6PZvVqDpd9vb9eeedryh` 类似的token，如果不行则登陆失败，请自行排除问题。
+    在运行 Natter 的设备上执行 `curl --insecure -s -i --header "Referer: https://localhost:8080" --data "username=admin&password=adminadmin" https://localhost:8080/api/v2/auth/login | grep -i set-cookie | cut -c13-48`（IP、账号及密码请自行替换），检查能否打印 `SID=6oavHb8b4MtL6PZvVqDpd9vb9eeedryh` 类似的token，如果不行则登陆失败，请自行排除问题。
 
 2. 编辑Hook
 

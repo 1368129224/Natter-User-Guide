@@ -1,6 +1,6 @@
 # 自动设置端口转发
 
-## 前提条件
+## 准备
 
 登录路由后台，执行 `uci` 命令，有如下打印则具有 [UCI](https://openwrt.org/zh/docs/guide-user/base-system/uci) 系统。
 
@@ -9,7 +9,7 @@ root@ImmortalWrt:~# uci
 Usage: uci [<options>] <command> [<arguments>]
 ```
 
-## 使用步骤
+## 配置
 
 1. 配置私钥登录 openwrt 路由器
 
