@@ -1,0 +1,32 @@
+version: '3.8'
+
+x-natter-common: &natter-common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  network_mode: host
+  cgroup_parent: natter.slice
+  cap_add:
+    - NET_ADMIN
+    - NET_RAW
+  restart: always
+  environment:
+    TZ: Asia/Shanghai
+  volumes:
+    - ./hooks:/opt/hooks
+    - ./resolv.conf:/opt/natter-resolv.conf:ro
+
+services:
+  natter-service:
+    <<: *natter-common
+    container_name: natter-service
+    # 请根据实际情况修改 -i 绑定的本地物理网卡 IP 与 -p 目标端口
+    command: >
+      -m iptables
+      -i 192.168.1.100
+      -s stun.nextcloud.com
+      -s stun.freeswitch.org
+      -s turn.cloudflare.com
+      -h 110.242.69.21
+      -p 22
+      -e /opt/hooks/notify-hook.py

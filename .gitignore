@@ -1,0 +1,16 @@
+# Agent instruction files
+AGENTS.md
+agents.md
+
+# Operating System & Editor Files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Logs & Temporary files
+*.log
+*.tmp

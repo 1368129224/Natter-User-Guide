@@ -1,0 +1,13 @@
+[Unit]
+Description=Natter cgroup mark for direct egress (mihomo TUN bypass)
+Wants=network-online.target
+After=network-online.target
+Before=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/natter-nft-bypass.sh
+
+[Install]
+WantedBy=multi-user.target
