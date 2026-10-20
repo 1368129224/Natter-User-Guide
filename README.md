@@ -161,7 +161,11 @@ Natter 提供多种途径，将 Natter 端口流量转发至目标端口。
 
 - 使用 screen 或 tmux 等工具在后台运行 Natter，避免关闭终端导致 Natter 退出。
 
-- 把以下命令加入开机脚本：`echo "sudo-password" | sudo -S nohup /home/zooter/scripts/nas/nat/natter.py -m iptables -p 18888 -i 192.168.1.100 -e /home/zooter/scripts/nas/nat/vscode-hook.py &`
+- 把以下命令加入开机脚本（请将密码、路径与 IP 替换为实际值）：
+
+    ```bash
+    echo "your-sudo-password" | sudo -S nohup /path/to/natter.py -m iptables -p 18888 -i 192.168.1.100 -e /path/to/hook.py &
+    ```
 
 - 使用 Docker 运行（推荐）
 
