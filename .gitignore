@@ -11,6 +11,15 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Local Secrets & Custom Scripts
+.env
+.env.*
+*.local.*
+
+# Python Cache
+__pycache__/
+*.py[cod]
+
 # Logs & Temporary files
 *.log
 *.tmp

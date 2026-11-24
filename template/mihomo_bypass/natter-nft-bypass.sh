@@ -2,14 +2,17 @@
 # Natter mihomo-TUN bypass via nftables (cgroup v2)
 set -eu
 
-TABLE="inet natter-bypass"
-if sudo nft list table $TABLE >/dev/null 2>&1; then
-  sudo nft flush table $TABLE
-else
-  sudo nft add table $TABLE
+if [ "$(id -u)" -ne 0 ]; then
+  echo "Error: This script must be run as root." >&2
+  exit 1
 fi
 
-sudo nft -f - << 'EOF'
+# 确保 cgroup 目录存在，避免容器未启动前 nftables 解析路径失败
+mkdir -p /sys/fs/cgroup/natter.slice
+
+nft -f - << 'EOF'
+table inet natter-bypass
+delete table inet natter-bypass
 table inet natter-bypass {
   chain out {
     # 优先级设置为 mangle - 5，早于 mihomo 的重定向链
