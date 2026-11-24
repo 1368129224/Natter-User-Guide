@@ -1,10 +1,33 @@
-# Natter v2 使用指南
+<div align="center">
 
-本项目旨在帮助大家应用 [Natter v2](https://github.com/MikeWang000000/Natter)，在 **Full Cone NAT** 网络环境下打开 TCP 端口，获得在 IPv4 可连接的端口，并提供一些实用的 Hook 与部署模板。
+# Natter v2 实战使用指南与 Hook 模板库
 
-<p align="right">
-Natter 官方交流群组：<a href="https://jq.qq.com/?_wv=1027&k=EYXohGpC">Q 657590400</a> | <a href="https://t.me/+VS5sjOWGgzsyYjY1">TG</a>
-</p>
+**在无公网 IP 的家宽 NAT1（Full Cone NAT）环境下，利用 Natter 实现高性能 TCP 打洞直连与全流程自动化**
+
+[![Natter](https://img.shields.io/badge/Natter-v2.x-blue?logo=github)](https://github.com/MikeWang000000/Natter)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20NAS%20%7C%20OpenWrt%20%7C%20Docker-success)](#目录)
+[![License](https://img.shields.io/badge/License-GPL--3.0-orange)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/1368129224/Natter-User-Guide/pulls)
+
+Natter 官方交流群组：[QQ 群 657590400](https://jq.qq.com/?_wv=1027&k=EYXohGpC) · [Telegram 群组](https://t.me/+VS5sjOWGgzsyYjY1)
+
+</div>
+
+---
+
+## 项目简介
+
+家庭宽带没有公网 IPv4、第三方中转内网穿透带宽受限？只要你的网络满足 **Full Cone NAT（NAT1 / 全锥型 NAT）**，即可使用 [Natter v2](https://github.com/MikeWang000000/Natter) 直接在运营商 NAT 上打通可从外网直连的 TCP 端口，跑满家宽上行带宽。
+
+本仓库提供**从零入门的图文实操教程**以及**经过实战验证的部署与自动化 Hook 模板**，帮助你解决自建 NAS / Homelab 打洞落地中的常见痛点：
+
+| 模块 / 模板 | 解决什么问题 | 快速入口 |
+| :--- | :--- | :--- |
+| **基础与路由打洞教程** | NAT1 环境检测、路由下挂 NAS（DMZ / 端口映射）及 OpenWrt 主路由直跑 | [阅读教程](#natter-基本使用) |
+| **Mihomo (Clash) TUN 共存方案** | 解决 Linux/NAS 开启透明代理（TUN + Fake-IP）后劫持 STUN 导致打洞失败 | [template/mihomo_bypass](template/mihomo_bypass/README.md) |
+| **Cloudflare DDNS 免端口 & 推送** | 自动维护 `A` + `HTTPS(SVCB)` 记录实现**浏览器免输端口号访问**，支持 TG / 企微 / 飞书 / 钉钉 / Bark 通知 | [template/ddns_notify](template/ddns_notify/ddns_notify.md) |
+| **qBittorrent 端口自动同步** | 每次打洞端口变动后自动更新 qB 监听端口与转发规则，显著提升 BT / PT 连通率 | [template/qBittorrent](template/qBittorrent/qBittorrent.md) |
+| **OpenWrt 自动端口转发** | 无需开启全局 DMZ，通过 SSH + UCI 自动更新路由器防火墙 DNAT 规则 | [template/auto_forward](template/auto_forward/auto_forward.md) |
 
 ## 目录
 
